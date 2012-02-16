@@ -1,0 +1,7 @@
+procedure main(integer n)
+begin
+	for integer k = 1 until 3 do
+		k = k + 1;
+		print(3);
+	od;
+end;

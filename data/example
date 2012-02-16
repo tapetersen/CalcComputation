@@ -1,0 +1,17 @@
+procedure main(integer n)
+begin
+	integer sum = 0;
+	integer k;
+	n = 2;
+	for k = 1 until k==10 do
+		k = k+1;
+		sum = sum + k * 2 + 1;
+		print(sum);
+		print(k);
+	od;
+	if sum + 2 * n < sum * 2 then
+		print(sum);
+	else
+		print(0);
+	fi;
+end;

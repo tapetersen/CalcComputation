@@ -1,0 +1,9 @@
+procedure main(integer n)
+begin
+	integer sum = 3;
+	if 0 then
+		print(sum);
+	else
+		print(0);
+	fi;
+end;

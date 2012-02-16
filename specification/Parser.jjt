@@ -1,0 +1,184 @@
+PARSER_BEGIN(Parser)
+package parser;
+public class Parser {}
+PARSER_END(Parser)
+
+/* SCANNER */
+
+/* Skip whitespace */
+SKIP : { " " | "\t" | "\n" | "\r" }
+
+/* Reserved words */
+TOKEN: {
+  < PROCEDURE: "procedure" >
+| < BEGIN: "begin" >
+| < INTEGER: "integer" >
+| < FOR: "for" >
+| < UNTIL: "until" >
+| < DO: "do" >
+| < OD: "od" >
+| < IF: "if" >
+| < THEN: "then" >
+| < ELSE: "else" >
+| < FI: "fi" >
+| < END: "end">
+}
+
+/* Numerals */
+TOKEN: {
+  < NUMERAL: (["0"-"9"])+ >   
+}
+
+/* Operators */
+TOKEN: {
+  < ASSIGN: "=" >
+| < MUL: "*" >
+| < ADD: "+" >
+| < SUB: "-" >
+| < DIV: "/" >
+| < GTE: ">=" >
+| < LTE: "<=" >
+| < LT:  "<" >
+| < GT:  ">" >
+| < EQ:  "==" >
+| < NEQ: "!=" >
+}
+
+/* separators */
+TOKEN: {
+  < LPAR: "(" >
+| < RPAR: ")" >
+| < SEMI: ";" >
+| < COMMA: "," >
+}
+
+/* Identifiers */
+TOKEN: {
+  < ID: (["A"-"Z", "a"-"z"])+ >
+}
+
+/* Illegal */
+TOKEN: {
+  < ERROR: ~[] >
+}
+
+
+/* PARSER */
+Start start() #Start: {}
+{
+  procedure() <EOF>
+  { return jjtThis; }
+}
+
+void procedure() #Procedure: {}
+{
+  proc_header() proc_body() <SEMI>
+}
+
+void proc_header() : {}
+{
+  <PROCEDURE> id() <LPAR> ([ declaration() ( <COMMA> declaration() )* ]) #List(true) <RPAR>
+}
+
+void proc_body() : {}
+{
+  <BEGIN> stmts() <END>
+}
+
+void stmts() : {}
+{
+   ( ( stmt() <SEMI>)* ) #List(true)
+}
+
+void stmt() : {}
+{
+  ( declaration() | LOOKAHEAD(3) assignment() | LOOKAHEAD(3) expr() #ExprStmt |  ifstmt() | forstmt() )
+}
+
+void ifstmt() #IfStmt: {}
+{
+  <IF> expr() <THEN> stmts() ([ <ELSE> stmts() ]) <FI>
+}
+
+void forstmt() #ForStmt: {}
+{
+  <FOR> stmt() <UNTIL> expr() <DO> stmts() <OD>
+}
+
+void declaration() #Decl: {}
+{
+  type() id() ([ <ASSIGN> expr() ]) #Opt(true)
+}
+
+void assignment() #Assgn: {}
+{
+  id() <ASSIGN> expr() 
+}
+
+void expr() : {}
+{
+  numexpr() [
+      <LT> numexpr() #Lt(2)
+    | <GT> numexpr() #Gt(2)
+    | <GTE> numexpr() #Gte(2)
+    | <LTE> numexpr() #Lte(2)
+    | <EQ> numexpr() #Eq(2)
+    | <NEQ> numexpr() #Neq(2)
+  ]
+}
+
+void numexpr() : {}
+{
+  term() ( 
+      <ADD> term() #Add(2) 
+    | <SUB> term() #Sub(2)
+  )*
+}
+
+void term() : {}
+{
+  factor() ( 
+      <MUL> factor() #Mul(2) 
+    | <DIV> factor() #Div(2) 
+  )*
+}
+
+void factor() : {}
+{
+  LOOKAHEAD(2) funccall() | id() | numeral() | <LPAR> expr() <RPAR>
+}
+
+void funccall() #FuncCall: {}
+{
+  id() <LPAR>  ([ arglist() ]) #List(true) <RPAR>
+}
+
+void arglist() : {}
+{
+  expr() ( <COMMA> expr() )*
+}
+
+
+void numeral() #Numeral: 
+{ Token t; }          
+{
+  t = <NUMERAL>
+  {jjtThis.setNUMERAL(t.image);
+  }
+}
+
+void id() #Id:
+{ Token t; } 
+{
+  t = <ID>
+  { jjtThis.setID(t.image);
+  }
+}
+
+void type() #Type:
+{ Token t; } 
+{
+  t = <INTEGER>
+  { jjtThis.setINTEGER(t.image);
+  }
+}

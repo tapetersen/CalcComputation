@@ -1,0 +1,119 @@
+import java.util.Map;
+
+aspect Interpret {
+
+  abstract void Stmt.interpret(Map<String, Integer> context);
+
+  public void Start.interpret(Map<String, Integer> context) {
+    getProcedure().interpret(context);
+  }
+  
+  public void Procedure.interpret(Map<String, Integer> context) {
+    for(Decl d : getDecls()) {
+    	d.interpret(context);
+
+    }
+    for(Stmt t : getStmts())
+    	t.interpret(context);
+  }
+  
+  public void Decl.interpret(Map<String, Integer> context) {
+  	if(hasExpr())
+		context.put(getId().getID(), getExpr().eval(context));
+	else
+		context.put(getId().getID(), null);
+  }
+  
+  public void Assgn.interpret(Map<String, Integer> context) {
+  	String id = getId().getID();
+  	if(!context.containsKey(id))
+  		throw new RuntimeException(id + " undeclared");
+  		
+  	context.put(id, getExpr().eval(context));
+  }
+
+  public void ExprStmt.interpret(Map<String, Integer> context) {
+  	getExpr().eval(context);
+  }
+  
+  public void IfStmt.interpret(Map<String, Integer> context) {
+    if(getExpr().eval(context) != 0) 
+    	for(Stmt t : getIfParts())
+    		t.interpret(context);
+    else
+    	for(Stmt t : getElseParts())
+    		t.interpret(context);
+    		
+  }
+  
+  public void ForStmt.interpret(Map<String, Integer> context) {
+  	getInit().interpret(context);
+  	while(getCheck().eval(context) == 0)
+  		for(Stmt t : getBodys())
+  			t.interpret(context);
+  }
+  
+  abstract int Expr.eval(Map<String, Integer> context);
+  
+  public int Mul.eval(Map<String, Integer> context) {
+  	return getLeft().eval(context) * getRight().eval(context);
+  }
+  
+  public int Div.eval(Map<String, Integer> context) {
+  	return getLeft().eval(context) / getRight().eval(context);
+  }
+  
+  public int Add.eval(Map<String, Integer> context) {
+  	return getLeft().eval(context) + getRight().eval(context);
+  }
+  
+  public int Sub.eval(Map<String, Integer> context) {
+  	return getLeft().eval(context) - getRight().eval(context);
+  }
+  
+  public int Gt.eval(Map<String, Integer> context) {
+  	return (getLeft().eval(context) > getRight().eval(context)) ? 1 : 0;
+  }
+  
+  public int Lt.eval(Map<String, Integer> context) {
+  	return (getLeft().eval(context) < getRight().eval(context)) ? 1 : 0;
+  }
+  
+  public int Gte.eval(Map<String, Integer> context) {
+  	return (getLeft().eval(context) >= getRight().eval(context)) ? 1 : 0;
+  }
+  
+  public int Lte.eval(Map<String, Integer> context) {
+  	return (getLeft().eval(context) <= getRight().eval(context)) ? 1 : 0;
+  }
+  
+  public int Eq.eval(Map<String, Integer> context) {
+  	return (getLeft().eval(context) == getRight().eval(context)) ? 1 : 0;
+  }
+  
+  public int Neq.eval(Map<String, Integer> context) {
+  	return (getLeft().eval(context) != getRight().eval(context)) ? 1 : 0;
+  }
+  
+  public int FuncCall.eval(Map<String, Integer> context) {
+	if(getId().getID().equals("print")) {
+		System.out.println(""+getArg(0).eval(context));
+		return 0;
+	} else {
+		throw new RuntimeException("Unknown function: " + getId().getID());
+	}
+  }
+  
+  public int Numeral.eval(Map<String, Integer> context) {
+  	return Integer.parseInt(getNUMERAL());
+  }
+  
+  public int Id.eval(Map<String, Integer> context) {
+  	if(!context.containsKey(getID()))
+  		throw new RuntimeException("Undeclared variable: " + getID());
+  	else if(context.get(getID()) == null)
+  		throw new RuntimeException("Use of uninitialized variable: " + getID());
+  	else
+  		return context.get(getID());
+  }
+}

@@ -1,0 +1,5 @@
+procedure main(integer n)
+begin
+	integer a = 2+3*3;
+	print(a);
+end;

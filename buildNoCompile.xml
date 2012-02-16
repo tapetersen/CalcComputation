@@ -1,0 +1,4 @@
+<project name="CalcTreeNoCompile" default="build" basedir=".">
+    <import file="build.xml" />
+    <property name="nocompile" value="true" />
+</project>

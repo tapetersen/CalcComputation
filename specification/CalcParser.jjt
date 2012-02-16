@@ -1,0 +1,97 @@
+PARSER_BEGIN(Parser)
+package parser;
+public class Parser {}
+PARSER_END(Parser)
+
+SKIP: { " " | "\t" | "\n" | "\r" }
+
+TOKEN: {
+  < LET: "let">
+| < IN: "in">
+| < END: "end">
+| < ASK: "ask">
+| < USER: "user">
+}
+
+TOKEN: {
+  < ASSIGN: "=" >
+| < MUL: "*" >
+| < DIV: "/" >
+| < COMMA: "," >
+| < QUESTION: "?" >
+}
+
+TOKEN: {
+  < NUMERAL: (["0"-"9"])+ "." (["0"-"9"])+ >
+}
+
+TOKEN: {
+  < ID: (["A"-"Z", "a"-"z"])+ >
+}
+
+TOKEN: {
+  < ERROR: ~[] >
+}
+
+public Start start() #Start: {}  
+{
+  exp() <EOF>
+  { return jjtThis; }
+}
+
+void exp() : {}
+{
+  factor()
+  ( "*" factor() #Mul(2)
+  | "/" factor() #Div(2)
+  )*
+}
+
+void factor() : {} 
+{
+  let()
+| numeral()
+| id()
+| ask()
+}
+
+void let() #Let: {} 
+{
+  <LET> bindingList() <IN> exp() <END>
+}
+
+void bindingList() #List : {}
+{
+  binding() ( "," binding() )*
+}
+
+void binding() #Binding: {}
+{
+  id() "=" exp()
+}
+
+void numeral() #Numeral: 
+{ Token t; }
+{
+  t = <NUMERAL>
+  { jjtThis.setNUMERAL(t.image);
+  }
+}
+void id() #Id: 
+{ Token t; }
+{
+  t = <ID>
+  { jjtThis.setID(t.image);
+  }
+}
+
+void ask() #Ask: {}
+{
+  <ASK> <USER> optDefaultValue() "?"
+}
+
+void optDefaultValue() #Opt: {}
+{
+  [ exp() ]
+}
+

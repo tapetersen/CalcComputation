@@ -1,0 +1,27 @@
+Start ::= Procedure;
+
+Procedure ::= Id Decl* Stmt*;
+
+abstract Stmt;
+Decl: Stmt ::= Type Id [Expr];
+Assgn: Stmt ::= Id Expr;
+ExprStmt: Stmt ::= Expr;
+IfStmt: Stmt ::= Expr IfPart:Stmt* ElsePart:Stmt*;
+ForStmt: Stmt ::= Init:Stmt Check:Expr Body:Stmt*;
+
+abstract Expr;
+abstract BinExpr: Expr ::= Left:Expr Right:Expr;
+FuncCall: Expr ::= Id Arg:Expr*;
+Mul: BinExpr ::= Left:Expr Right:Expr;
+Add: BinExpr ::= Left:Expr Right:Expr;
+Sub: BinExpr ::= Left:Expr Right:Expr;
+Div: BinExpr ::= Left:Expr Right:Expr;
+Lt: BinExpr ::= Left:Expr Right:Expr;
+Gt: BinExpr ::= Left:Expr Right:Expr;
+Lte: BinExpr ::= Left:Expr Right:Expr;
+Gte: BinExpr ::= Left:Expr Right:Expr;
+Eq: BinExpr ::= Left:Expr Right:Expr;
+Neq: BinExpr ::= Left:Expr Right:Expr;
+Numeral: Expr ::= <NUMERAL>;
+Id: Expr ::= <ID>;
+Type ::= <INTEGER>;

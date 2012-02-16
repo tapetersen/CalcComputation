@@ -1,0 +1,86 @@
+<project name="TreeComputation" default="build">
+
+    <property name="lib" value="lib" />
+    <property name="parser.name" value="Parser" />
+    <property name="parser.program" value="test.TestInterpret" />
+    <property name="specification.directory" value="specification" />
+    <property name="parser.package" value="parser" />
+    <property name="parser.directory" value="src/${parser.package}" />
+
+    <taskdef classname="jastadd.JastAddTask"
+             name="jastadd"
+             classpath="${lib}/jastadd2.jar" />
+
+    <target name="build">
+        <mkdir dir="${parser.directory}" />
+        <jastadd package="${parser.package}"
+                 outdir="src"
+                 jjtree="true"
+                 grammar="${parser.name}">
+            <fileset dir="${specification.directory}">
+                <include name="${parser.name}.ast" />
+                <include name="*.jadd" />
+            </fileset>
+        </jastadd>
+        <jjtree target="${specification.directory}/${parser.name}.jjt"
+                outputdirectory="${parser.directory}"
+                javacchome="${lib}"
+                buildnodefiles="true"
+                static="false"
+                multi="true"
+                nodeprefix='""'
+                visitor="true"
+                nodedefaultvoid="true"
+                nodepackage="${parser.package}" />
+        <javacc target="${parser.directory}/${parser.name}.jj"
+                outputdirectory="${parser.directory}"
+                javacchome="${lib}"
+                static="false" />
+        <antcall target="compile" />
+    </target>
+
+    <target name="compile" unless="nocompile">
+        <javac srcdir="src" destdir="bin" classpath="${lib}/junit.jar" />
+    </target>
+
+    <target name="test" depends="build" description="Run all tests.">
+        <java classname="org.junit.runner.JUnitCore"
+              classpath="bin:${lib}/junit.jar">
+            <arg value="test.TestAOP" />
+        </java>
+        <java classname="org.junit.runner.JUnitCore"
+              classpath="bin:${lib}/junit.jar">
+            <arg value="test.TestVisitor" />
+        </java>
+    </target>
+
+    <target name="doc"
+            depends="build"
+            description="Generate the grammar as html">
+        <jjdoc target="${parser.directory}/${parser.name}.jj"
+               javacchome="${lib}" />
+    </target>
+
+    <target name="output"
+            depends="build"
+            description="Creates a result file in the project directory.">
+        <input message="Target name"
+               addproperty="target.name"
+               defaultvalue="example" />
+        <java classpath="bin"
+              classname="${parser.program}"
+              output="${target.name}.res">
+            <arg value="data/${target.name}" />
+        </java>
+        <echo>${target.name}.calc.res created using ${parser.program}</echo>
+    </target>
+
+    <target name="clean" description="Delete generated files.">
+        <delete dir="${parser.directory}" />
+        <delete dir="bin" />
+        <mkdir dir="bin" />
+        <delete>
+            <fileset dir="." includes="*.res, *.html" />
+        </delete>
+    </target>
+</project>
