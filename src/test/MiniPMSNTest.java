@@ -1,48 +1,49 @@
 package test;
 
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 
-import parser.Node;
+import org.junit.Test;
+
 import parser.Parser;
 import parser.Start;
-import parser.Stmt;
 
 public class MiniPMSNTest extends TestCaseOutput {
 	private final static String DATA = "data/";
 	private final static String RESULT = "result/";
-	private final static String RESULT_EXTENSION = ".msn";
-	private static int msn;
+	private final static String RESULT_EXTENSION = ".res";
 
-	public static void main(String args[]) {
-		int msn = 0;
-		calcMSN("addmulexample");
+	private void assertCorrectOutput(String testName) {
+		String fullName = testName;
+		interactive(DATA + fullName);
+		assertOutput(new File(RESULT + fullName + RESULT_EXTENSION));
 	}
 
-	public static void calcMSN(String arg) {
+	@Test
+	public void forforforlamb() {
+		assertCorrectOutput("forforforlamb");
+	}
+
+	@Test
+	public void example() {
+		assertCorrectOutput("example");
+	}
+
+	private static void interactive(String arg) {
 		try {
-			Parser parser = new Parser(new FileReader(DATA + arg));
-			FileWriter file = new FileWriter(RESULT + arg + RESULT_EXTENSION);
-			BufferedWriter out = new BufferedWriter(file);
-			MiniPMSNVisitor visitor = new MiniPMSNVisitor();
+			Parser parser = new Parser(new FileReader(arg));
 			Start start = parser.start();
-			calcMsn(start, 0);
-			out.write(msn);
+			MiniPMSNVisitor v = new MiniPMSNVisitor();
+			int nestingDepth = (Integer) v.visit(start, null);
+			System.out.println("NestingDepth is: " + nestingDepth);
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println("wtf!");
+			e.printStackTrace();
 		}
 	}
 
-	private static void calcMsn(Node node, int tmpMSN) {
-		for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-			if (node.jjtGetChild(i) instanceof Stmt) {
-				tmpMSN++;
-				msn = Math.max(tmpMSN, msn);
-				calcMsn(node.jjtGetChild(i), tmpMSN);
-				tmpMSN--;
-			}
-		}
+	public static void main(String[] args) {
+		interactive(args[0]);
 	}
 }

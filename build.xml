@@ -2,7 +2,7 @@
 
     <property name="lib" value="lib" />
     <property name="parser.name" value="Parser" />
-    <property name="parser.program" value="test.TestInterpret" />
+    <property name="parser.program" value="test.MiniPMSNTest" />
     <property name="specification.directory" value="specification" />
     <property name="parser.package" value="parser" />
     <property name="parser.directory" value="src/${parser.package}" />

@@ -35,7 +35,7 @@ public class TestVisitor extends TestCaseOutput {
 			Parser parser = new Parser(new FileReader(arg));
 			Start start = parser.start();
 			MiniPMSNVisitor v = new MiniPMSNVisitor();
-			Boolean interactive = (Boolean) start.jjtAccept(v, null);
+			Boolean interactive = (Boolean) v.visit(start, null);
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());

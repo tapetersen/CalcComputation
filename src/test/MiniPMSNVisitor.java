@@ -36,17 +36,20 @@ public class MiniPMSNVisitor implements ParserVisitor {
 
 	@Override
 	public Object visit(Start node, Object data) {
-		return (Integer) visit(node.getProcedure(), null);
+		return (Integer) node.getProcedure().jjtAccept(this, null);
+
 	}
 
 	@Override
 	public Object visit(Procedure node, Object data) {
 		Integer max = 0;
 		Integer current;
-		for (Stmt s : node.getStmts())
-			if ((current = (Integer) visit(s, null)) > max)
+		for (Stmt s : node.getStmts()) {
+			current = (Integer) s.jjtAccept(this, null);
+			if (current > max)
 				max = current;
-		return max;
+		}
+		return max - 1;
 	}
 
 	@Override
@@ -64,12 +67,12 @@ public class MiniPMSNVisitor implements ParserVisitor {
 		Integer max = 0;
 		Integer current;
 		for (Stmt s : node.getIfParts())
-			if ((current = (Integer) visit(s, null)) > max)
+			if ((current = (Integer) s.jjtAccept(this, null)) > max)
 				max = current;
 		for (Stmt s : node.getElseParts())
-			if ((current = (Integer) visit(s, null)) > max)
+			if ((current = (Integer) s.jjtAccept(this, null)) > max)
 				max = current;
-		return max;
+		return max + 1;
 	}
 
 	@Override
@@ -77,13 +80,13 @@ public class MiniPMSNVisitor implements ParserVisitor {
 		Integer max = 0;
 		Integer current;
 
-		current = (Integer) visit(node.getInit(), null);
+		current = (Integer) node.getInit().jjtAccept(this, null);
 		max = current > max ? current : max;
 		for (Stmt s : node.getBodys())
-			if ((current = (Integer) visit(s, null)) > max)
+			if ((current = (Integer) s.jjtAccept(this, null)) > max)
 				max = current;
 
-		return max;
+		return max + 1;
 	}
 
 	@Override
