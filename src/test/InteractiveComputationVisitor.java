@@ -1,16 +1,29 @@
 package test;
-import parser.Ask;
-import parser.Binding;
+import parser.Add;
+import parser.Assgn;
+import parser.Decl;
 import parser.Div;
+import parser.Eq;
+import parser.ExprStmt;
+import parser.ForStmt;
+import parser.FuncCall;
+import parser.Gt;
+import parser.Gte;
 import parser.Id;
-import parser.Let;
+import parser.IfStmt;
 import parser.List;
+import parser.Lt;
+import parser.Lte;
 import parser.Mul;
+import parser.Neq;
 import parser.Numeral;
 import parser.Opt;
 import parser.ParserVisitor;
+import parser.Procedure;
 import parser.SimpleNode;
 import parser.Start;
+import parser.Sub;
+import parser.Type;
 
 class InteractiveComputationVisitor implements ParserVisitor {
     /*
@@ -53,25 +66,6 @@ class InteractiveComputationVisitor implements ParserVisitor {
         return new Boolean(v1.booleanValue() || v2.booleanValue());
     }
 
-    public Object visit(Let node, Object data) {
-        boolean soFar = false;
-        Boolean v;
-        for (int k = 0; k < node.getNumBinding(); k++) {
-            v = (Boolean) node.getBinding(k).jjtAccept(this, data);
-            soFar = soFar || v.booleanValue();
-        }
-        Boolean v2 = (Boolean) node.getExp().jjtAccept(this, data);
-        return new Boolean(soFar || v2.booleanValue());
-    }
-
-    public Object visit(Binding node, Object data) {
-        return node.getExp().jjtAccept(this, data);
-    }
-
-    public Object visit(Ask node, Object data) {
-        return Boolean.TRUE;
-    }
-
     public Object visit(Numeral node, Object data) {
         return Boolean.FALSE;
     }
@@ -79,4 +73,100 @@ class InteractiveComputationVisitor implements ParserVisitor {
     public Object visit(Id node, Object data) {
         return Boolean.FALSE;
     }
+
+	@Override
+	public Object visit(Procedure node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(ExprStmt node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(IfStmt node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(ForStmt node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Decl node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Assgn node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Lt node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Gt node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Gte node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Lte node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Eq node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Neq node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Add node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Sub node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(FuncCall node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(Type node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
