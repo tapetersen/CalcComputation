@@ -25,8 +25,18 @@ public class MiniPMSNTest extends TestCaseOutput {
 	}
 
 	@Test
-	public void example() {
-		assertCorrectOutput("example");
+	public void forif() {
+		assertCorrectOutput("forif");
+	}
+
+	@Test
+	public void ifelse1() {
+		assertCorrectOutput("ifelse1");
+	}
+
+	@Test
+	public void ifelse2() {
+		assertCorrectOutput("ifelse2");
 	}
 
 	private static void interactive(String arg) {

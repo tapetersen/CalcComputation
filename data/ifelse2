@@ -1,0 +1,11 @@
+procedure main(integer n)
+begin
+	integer sum = 3;
+	if 0 then
+		if 1 then
+			print(sum + 1);
+		fi;
+	else
+		print(sum);
+	fi;
+end;
