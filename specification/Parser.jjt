@@ -82,12 +82,12 @@ void proc_header() : {}
 
 void proc_body() : {}
 {
-  <BEGIN> stmts() <END>
+  <BEGIN> stmts() #List(true) <END>
 }
 
 void stmts() : {}
 {
-   ( ( stmt() <SEMI>)* ) #List(true)
+   ( stmt() <SEMI>)*
 }
 
 void stmt() : {}
@@ -97,13 +97,13 @@ void stmt() : {}
 
 void ifstmt() #IfStmt: {}
 {
-  <IF> expr() <THEN> stmts() [<ELSE> stmts()] <FI>
+  <IF> expr() <THEN> stmts() #List(true) [<ELSE> stmts()] #List(true) <FI>
 }
 
 
 void forstmt() #ForStmt: {}
 {
-  <FOR> stmt() <UNTIL> expr() <DO> stmts() <OD>
+  <FOR> stmt() <UNTIL> expr() <DO> stmts() #List(true) <OD>
 }
 
 void declaration() #Decl: {}
