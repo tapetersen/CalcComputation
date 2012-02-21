@@ -44,6 +44,7 @@
     </target>
 
     <target name="test" depends="build" description="Run all tests.">
+        <!-- 
         <java classname="org.junit.runner.JUnitCore"
               classpath="bin:${lib}/junit.jar">
             <arg value="test.TestAOP" />
@@ -51,7 +52,16 @@
         <java classname="org.junit.runner.JUnitCore"
               classpath="bin:${lib}/junit.jar">
             <arg value="test.TestVisitor" />
+        </java> 
+        -->
+        <java classname="org.junit.runner.JUnitCore"
+              classpath="bin:${lib}/junit.jar">
+            <arg value="test.MiniPMSNTest" />
         </java>
+        <java classname="org.junit.runner.JUnitCore"
+              classpath="bin:${lib}/junit.jar">
+            <arg value="test.TestInterpret" />
+        </java> 
     </target>
 
     <target name="doc"

@@ -53,8 +53,8 @@ public abstract class TestCaseOutput {
     }
 
     public void assertOutput(String msg, String result) {
-        String s1 = result;//.replaceAll("\\s+", " ").trim();
-        String s2 = baos.toString();//.replaceAll("\\s+", " ").trim();
+        String s1 = result.replaceAll("\\r\\n+", "\n");//.trim();
+        String s2 = baos.toString().replaceAll("\\r\\n", "\n");//.trim();
         assertEquals(msg, s1, s2);
     }
 
