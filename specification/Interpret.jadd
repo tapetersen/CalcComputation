@@ -44,7 +44,7 @@ aspect Interpret {
     	for(Stmt t : getElseParts())
     		t.interpret(context);
     		
-  }
+  }  
   
   public void ForStmt.interpret(Map<String, Integer> context) {
   	getInit().interpret(context);

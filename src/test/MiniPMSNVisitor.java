@@ -69,9 +69,11 @@ public class MiniPMSNVisitor implements ParserVisitor {
 		for (Stmt s : node.getIfParts())
 			if ((current = (Integer) s.jjtAccept(this, null)) > max)
 				max = current;
-		for (Stmt s : node.getElseParts())
-			if ((current = (Integer) s.jjtAccept(this, null)) > max)
-				max = current;
+		if (node.getNumChildNoTransform() > 2) {
+			for (Stmt s : node.getElseParts())
+				if ((current = (Integer) s.jjtAccept(this, null)) > max)
+					max = current;
+		}
 		return max + 1;
 	}
 

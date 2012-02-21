@@ -92,13 +92,14 @@ void stmts() : {}
 
 void stmt() : {}
 {
-  ( declaration() | LOOKAHEAD(3) assignment() | LOOKAHEAD(3) expr() #ExprStmt |  ifstmt() | forstmt() )
+  ( declaration() | LOOKAHEAD(3) assignment() | LOOKAHEAD(3) expr() #ExprStmt | ifstmt() | forstmt() )
 }
 
 void ifstmt() #IfStmt: {}
 {
-  <IF> expr() <THEN> stmts() ([ <ELSE> stmts() ]) <FI>
+  <IF> expr() <THEN> stmts() [<ELSE> stmts()] <FI>
 }
+
 
 void forstmt() #ForStmt: {}
 {
